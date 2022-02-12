@@ -1,5 +1,7 @@
 package com.bill.coinbill.entity;
 
+import com.google.gson.Gson;
+
 import javax.persistence.*;
 
 @Entity
@@ -36,5 +38,10 @@ public class Coin {
 
     public void setCoinCount(long coinCount) {
         this.coinCount = coinCount;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

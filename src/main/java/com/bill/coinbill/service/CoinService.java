@@ -31,7 +31,7 @@ public class CoinService {
         int dimes =0;
         int nickels=0;
         int pennies=0;
-        int cents = (int) Math.round(100*bill);
+        int cents = Math.round(100*bill);
 
         Coin coinSchema = new Coin();
         //Collections.sort(coinCountLstFromDB);
