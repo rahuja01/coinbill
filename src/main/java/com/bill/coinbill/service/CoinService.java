@@ -28,24 +28,78 @@ public class CoinService {
 
         System.out.println("coinCountLstFromDB size: " + coinCountLstFromDB.size());
 
-        for(CoinSchema coinSchema :  coinCountLstFromDB){
+        int totalCoins = 0;
+        int quarters =0;
+        int dimes =0;
+        int nickels=0;
+        int pennies=0;
+        int cents = (int) Math.round(100*bill);
+
+        CoinSchema coinSchema = new CoinSchema();
+
+        for(CoinSchema coinSchemaDB :  coinCountLstFromDB){
             System.out.println("coinSchema Type: " + coinSchema.getCoinTypeEnum());
             System.out.println("coinSchema Value: " + coinSchema.getCoinCount());
-        }
 
-        int totalCoins = 0;
-        int cents = (int) Math.round(100*bill);
-        int quarters = Math.round((int)cents/25);
-        totalCoins +=quarters;
-        cents=cents%25;
-        int dimes = Math.round((int)cents/10);
-        totalCoins +=dimes;
-        cents=cents%10;
-        int nickels = Math.round((int)cents/5);
-        totalCoins +=nickels;
-        cents=cents%5;
-        int pennies = Math.round((int)cents/1);
-        totalCoins +=pennies;
+            if(coinSchemaDB.getCoinTypeEnum().equals(CoinType.Q)){
+                quarters = Math.round((int)cents/25);
+                if(coinSchemaDB.getCoinCount()>=quarters){
+
+                    totalCoins +=quarters;
+                    cents=cents%25;
+                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-quarters);
+                    //call service to update the count of quarters
+
+                    return getCoinSchemas(coinSchema, totalCoins, CoinType.Q, coinSchemasList);
+
+                }
+            }
+
+            if(coinSchemaDB.getCoinTypeEnum().equals(CoinType.D)){
+                dimes = Math.round((int)cents/10);
+                if(coinSchemaDB.getCoinCount()>=dimes){
+
+                    totalCoins +=dimes;
+                    cents=cents%10;
+                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-dimes);
+                    //call service to update the count of DIMES
+
+                    return getCoinSchemas(coinSchema, totalCoins, CoinType.D, coinSchemasList);
+
+                }
+            }
+
+            if(coinSchemaDB.getCoinTypeEnum().equals(CoinType.D)){
+                nickels = Math.round((int)cents/5);
+                if(coinSchemaDB.getCoinCount()>=nickels){
+
+                    totalCoins +=nickels;
+                    cents=cents%5;
+                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-nickels);
+                    //call service to update the count of NICKELS
+
+                    return getCoinSchemas(coinSchema, totalCoins, CoinType.N, coinSchemasList);
+
+                }
+            }
+
+            if(coinSchemaDB.getCoinTypeEnum().equals(CoinType.P)){
+                pennies = Math.round((int)cents/1);
+                if(coinSchemaDB.getCoinCount()>=pennies){
+
+                    totalCoins +=pennies;
+                    //cents=cents%1;
+                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-pennies);
+                    //call service to update the count of NICKELS
+
+                    return getCoinSchemas(coinSchema, totalCoins, CoinType.P, coinSchemasList);
+
+                }else {
+                    return null;
+                }
+            }
+
+        }
 
         System.out.println("Dollars: " + cents);
         System.out.println("Quarters: " + quarters);
@@ -54,14 +108,14 @@ public class CoinService {
         System.out.println("Pennies: " + pennies);
         System.out.println("totalCoins: " + totalCoins);
 
-        CoinSchema coinSchema = new CoinSchema();
+
+        return coinSchemasList;
+    }
+
+    private List<CoinSchema> getCoinSchemas(CoinSchema coinSchema, int totalCoins, CoinType p, List<CoinSchema> coinSchemasList) {
         coinSchema.setCoinCount(totalCoins);
-        coinSchema.setCoinTypeEnum(CoinType.Q);
-
+        coinSchema.setCoinTypeEnum(p);
         coinSchemasList.add(coinSchema);
-
-
-
         return coinSchemasList;
     }
 
