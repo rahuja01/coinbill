@@ -6,8 +6,7 @@ import com.bill.coinbill.repository.CoinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CoinService {
@@ -24,7 +23,7 @@ public class CoinService {
 
         List<CoinSchema> coinSchemasList = new ArrayList<>();
 
-        List<CoinSchema> coinCountLstFromDB = coinRepository.findAll();
+        List<CoinSchema> coinCountLstFromDB = coinRepository.getCoinDetails();
 
         System.out.println("coinCountLstFromDB size: " + coinCountLstFromDB.size());
 
@@ -36,8 +35,20 @@ public class CoinService {
         int cents = (int) Math.round(100*bill);
 
         CoinSchema coinSchema = new CoinSchema();
+        //Collections.sort(coinCountLstFromDB);
+        /*Collections.sort(CoinType, new Comparator<CoinType>() {
+            @Override
+            public int compare(CoinType person1, CoinType person2) {
+                if (person1.toString() == person2.getSeverity()) {
+                    return person1.getName().compareTo(person2.getName());
+                } else {
+                    return person1.getSeverity().compareTo(person2.getSeverity());
+                }
+            }
+        });*/
 
         for(CoinSchema coinSchemaDB :  coinCountLstFromDB){
+
             System.out.println("coinSchema Type: " + coinSchema.getCoinTypeEnum());
             System.out.println("coinSchema Value: " + coinSchema.getCoinCount());
 
