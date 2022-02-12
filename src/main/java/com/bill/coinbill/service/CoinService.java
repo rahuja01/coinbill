@@ -68,6 +68,8 @@ public class CoinService {
 
                     return getCoinSchemas(coinSchema, totalCoins, "Q", coinSchemasList);
 
+                }else {
+                    continue;
                 }
 
             }
@@ -83,6 +85,8 @@ public class CoinService {
                     coinRepository.save(coinSchemaDB);
                     return getCoinSchemas(coinSchema, totalCoins, "D", coinSchemasList);
 
+                }else {
+                    continue;
                 }
             }
 
@@ -97,6 +101,8 @@ public class CoinService {
                     coinRepository.save(coinSchemaDB);
                     return getCoinSchemas(coinSchema, totalCoins, "N", coinSchemasList);
 
+                }else {
+                    continue;
                 }
             }
 
