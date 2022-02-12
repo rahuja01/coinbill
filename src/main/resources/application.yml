@@ -1,0 +1,23 @@
+erver:
+  #  port: 8081
+  context-path: /rest
+
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  main:
+    banner-mode: "off"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    platform: h2
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org:
+      springframework: INFO
