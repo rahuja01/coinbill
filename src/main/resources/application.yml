@@ -1,15 +1,14 @@
 server:
-#  port: 8080
+  #  port: 8081
   context-path: /rest
 
 spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
   main:
     banner-mode: "off"
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:testdb
     platform: h2
     driverClassName: org.h2.Driver
     username: sa

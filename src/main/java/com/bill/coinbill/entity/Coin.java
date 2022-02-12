@@ -1,7 +1,5 @@
 package com.bill.coinbill.entity;
 
-import com.google.gson.Gson;
-
 import javax.persistence.*;
 
 @Entity
@@ -10,40 +8,33 @@ public class Coin {
 
     @Id
     @Column(name = "COIN_ID")
-    private long coinId;
-
-    @Column(name = "COIN_VALUE")
-    private int coinCount;
-
+    private long id;
     @Column(name = "COIN_TYPE")
-    String coinTypeEnum;
+    private String coinType;
+    @Column(name = "COIN_COUNT")
+    private long coinCount;
 
-    public long getCoinId() {
-        return coinId;
+    public long getId() {
+        return id;
     }
 
-    public void setCoinId(long coinId) {
-        this.coinId = coinId;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public int getCoinCount() {
+    public String getCoinType() {
+        return coinType;
+    }
+
+    public void setCoinType(String coinType) {
+        this.coinType = coinType;
+    }
+
+    public long getCoinCount() {
         return coinCount;
     }
 
-    public void setCoinCount(int coinCount) {
+    public void setCoinCount(long coinCount) {
         this.coinCount = coinCount;
-    }
-
-    public String getCoinTypeEnum() {
-        return coinTypeEnum;
-    }
-
-    public void setCoinTypeEnum(String coinTypeEnum) {
-        this.coinTypeEnum = coinTypeEnum;
-    }
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
     }
 }

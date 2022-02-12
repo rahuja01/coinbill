@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CoinRepository extends JpaRepository<Coin, Integer> {
+public interface CoinRepository extends JpaRepository<Coin, Long> {
 
 
     @Query(value = "select * from COIN", nativeQuery = true)

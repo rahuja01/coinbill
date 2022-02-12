@@ -48,10 +48,10 @@ public class CoinService {
 
         for(Coin coinSchemaDB :  coinCountLstFromDB){
 
-            System.out.println("coinSchema Type: " + coinSchema.getCoinTypeEnum());
+            System.out.println("coinSchema Type: " + coinSchema.getCoinType());
             System.out.println("coinSchema Value: " + coinSchema.getCoinCount());
 
-            if(coinSchemaDB.getCoinTypeEnum().equals("Q")){
+            if(coinSchemaDB.getCoinType().equals("Q")){
                 quarters = Math.round((int)cents/25);
                 if(coinSchemaDB.getCoinCount()>=quarters){
 
@@ -66,7 +66,7 @@ public class CoinService {
 
             }
 
-            if(coinSchemaDB.getCoinTypeEnum().equals("D")){
+            if(coinSchemaDB.getCoinType().equals("D")){
                 dimes = Math.round((int)cents/10);
                 if(coinSchemaDB.getCoinCount()>=dimes){
 
@@ -80,7 +80,7 @@ public class CoinService {
                 }
             }
 
-            if(coinSchemaDB.getCoinTypeEnum().equals("N")){
+            if(coinSchemaDB.getCoinType().equals("N")){
                 nickels = Math.round((int)cents/5);
                 if(coinSchemaDB.getCoinCount()>=nickels){
 
@@ -94,7 +94,7 @@ public class CoinService {
                 }
             }
 
-            if(coinSchemaDB.getCoinTypeEnum().equals("P")){
+            if(coinSchemaDB.getCoinType().equals("P")){
                 pennies = Math.round((int)cents/1);
                 if(coinSchemaDB.getCoinCount()>=pennies){
 
@@ -125,7 +125,7 @@ public class CoinService {
 
     private List<Coin> getCoinSchemas(Coin coinSchema, int totalCoins, String p, List<Coin> coinSchemasList) {
         coinSchema.setCoinCount(totalCoins);
-        coinSchema.setCoinTypeEnum(p);
+        coinSchema.setCoinType(p);
         coinSchemasList.add(coinSchema);
         return coinSchemasList;
     }
