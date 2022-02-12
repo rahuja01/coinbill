@@ -53,6 +53,7 @@ public class CoinService {
                     return getCoinSchemas(coinSchema, totalCoins, CoinType.Q, coinSchemasList);
 
                 }
+
             }
 
             if(coinSchemaDB.getCoinTypeEnum().equals(CoinType.D)){
@@ -101,7 +102,7 @@ public class CoinService {
 
         }
 
-        System.out.println("Dollars: " + cents);
+        System.out.println("total cents: " + cents);
         System.out.println("Quarters: " + quarters);
         System.out.println("Dimes: " + dimes);
         System.out.println("Nickels: " + nickels);
