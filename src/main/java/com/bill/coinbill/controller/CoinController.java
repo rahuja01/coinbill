@@ -1,6 +1,6 @@
 package com.bill.coinbill.controller;
 
-import com.bill.coinbill.entity.CoinSchema;
+import com.bill.coinbill.entity.Coin;
 import com.bill.coinbill.service.CoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class CoinController {
     @GetMapping(path = "/{bill}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getCoin(@PathVariable Integer bill){
 
-        List<CoinSchema> coinSchemasList = coinService.getCoin(bill);
+        List<Coin> coinSchemasList = coinService.getCoin(bill);
         if(coinSchemasList!=null){
             return new ResponseEntity<String>(coinSchemasList.toString(), HttpStatus.OK);
         }else {
