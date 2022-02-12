@@ -5,6 +5,7 @@ server:
 spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    show_sql: true
   main:
     banner-mode: "off"
   datasource:

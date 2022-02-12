@@ -48,8 +48,8 @@ public class CoinService {
 
         for(Coin coinSchemaDB :  coinCountLstFromDB){
 
-            System.out.println("coinSchema Type: " + coinSchema.getCoinType());
-            System.out.println("coinSchema Value: " + coinSchema.getCoinCount());
+            System.out.println("coinSchema Type: " + coinSchemaDB.getCoinType());
+            System.out.println("coinSchema Value: " + coinSchemaDB.getCoinCount());
 
             if(coinSchemaDB.getCoinType().equals("Q")){
                 quarters = Math.round((int)cents/25);
@@ -59,6 +59,12 @@ public class CoinService {
                     cents=cents%25;
                     coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-quarters);
                     //call service to update the count of quarters
+                    System.out.println("coinSchema Type after : " + coinSchemaDB.getCoinType());
+                    System.out.println("coinSchema Value after : " + coinSchemaDB.getCoinCount());
+                    //coinRepository.updateCoinBalance(coinSchemaDB.getCoinCount(), coinSchemaDB.getCoinType());
+
+                    coinRepository.save(coinSchemaDB);
+
 
                     return getCoinSchemas(coinSchema, totalCoins, "Q", coinSchemasList);
 
@@ -74,7 +80,7 @@ public class CoinService {
                     cents=cents%10;
                     coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-dimes);
                     //call service to update the count of DIMES
-
+                    coinRepository.save(coinSchemaDB);
                     return getCoinSchemas(coinSchema, totalCoins, "D", coinSchemasList);
 
                 }
@@ -88,7 +94,7 @@ public class CoinService {
                     cents=cents%5;
                     coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-nickels);
                     //call service to update the count of NICKELS
-
+                    coinRepository.save(coinSchemaDB);
                     return getCoinSchemas(coinSchema, totalCoins, "N", coinSchemasList);
 
                 }
@@ -102,7 +108,7 @@ public class CoinService {
                     //cents=cents%1;
                     coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-pennies);
                     //call service to update the count of NICKELS
-
+                    coinRepository.save(coinSchemaDB);
                     return getCoinSchemas(coinSchema, totalCoins, "P", coinSchemasList);
 
                 }else {
