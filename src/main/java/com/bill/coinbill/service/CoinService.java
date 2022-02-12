@@ -13,12 +13,9 @@ public class CoinService {
     @Autowired
     CoinRepository coinRepository;
 
-    /*@Autowired
-    List<CoinSchema> coinSchemasList;*/
-
     public List<Coin> getCoin(Integer bill){
 
-        // logic for coin bill dispenser
+        // logic for bill coin dispenser
 
         List<Coin> coinSchemasList = new ArrayList<>();
 
@@ -34,17 +31,6 @@ public class CoinService {
         int cents = Math.round(100*bill);
 
         Coin coinSchema = new Coin();
-        //Collections.sort(coinCountLstFromDB);
-        /*Collections.sort(CoinType, new Comparator<CoinType>() {
-            @Override
-            public int compare(CoinType person1, CoinType person2) {
-                if (person1.toString() == person2.getSeverity()) {
-                    return person1.getName().compareTo(person2.getName());
-                } else {
-                    return person1.getSeverity().compareTo(person2.getSeverity());
-                }
-            }
-        });*/
 
         for(Coin coinSchemaDB :  coinCountLstFromDB){
 
