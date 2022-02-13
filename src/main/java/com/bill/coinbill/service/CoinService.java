@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CoinService {
@@ -16,12 +17,17 @@ public class CoinService {
     public List<Coin> getCoin(Integer bill){
 
         // logic for bill coin dispenser
-
-        List<Coin> coinSchemasList = new ArrayList<>();
+        //List for response entity
+        List<Coin> coinVOList = new ArrayList<>();
 
         List<Coin> coinCountLstFromDB = coinRepository.getCoinDetails();
-
         System.out.println("coinCountLstFromDB size: " + coinCountLstFromDB.size());
+
+        LinkedHashMap<String, Long> linkedHashMap = new LinkedHashMap<>();
+
+        for(Coin coinValue : coinCountLstFromDB){
+            linkedHashMap.put(coinValue.getCoinType(), coinValue.getCoinCount());
+        }
 
         int totalCoins = 0;
         int quarters =0;
@@ -30,83 +36,82 @@ public class CoinService {
         int pennies=0;
         int cents = Math.round(100*bill);
 
-        Coin coinSchema = new Coin();
+        Coin coin = new Coin();
 
-        for(Coin coinSchemaDB :  coinCountLstFromDB){
+        for (Map.Entry<String, Long> coinEntry : linkedHashMap.entrySet()) {
+            System.out.println(coinEntry.getKey() + ":" + coinEntry.getValue());
 
-            System.out.println("coinSchema Type: " + coinSchemaDB.getCoinType());
-            System.out.println("coinSchema Value: " + coinSchemaDB.getCoinCount());
+            quarters = Math.round((int)cents/25);
+            dimes = Math.round((int)cents/10);
+            nickels = Math.round((int)cents/5);
+            pennies = Math.round((int)cents/1);
 
-            if(coinSchemaDB.getCoinType().equals("Q")){
-                quarters = Math.round((int)cents/25);
-                if(coinSchemaDB.getCoinCount()>=quarters){
+            if(Objects.equals(coinEntry.getKey(), "Q") && coinEntry.getValue()>=quarters){
+                //logic to allocate coins
+                totalCoins +=quarters;
+                cents=cents%25;
+                String typeOfCoin = "Q";
+                extracted(totalCoins, coinVOList, typeOfCoin);
+                //logic to persist in DB
+                int coinCount = (int) (coinEntry.getValue()-quarters);
+                coin.setId(1);
+                coin.setCoinType("Q");
+                coin.setCoinCount(coinCount);
 
-                    totalCoins +=quarters;
-                    cents=cents%25;
-                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-quarters);
-                    //call service to update the count of quarters
-                    System.out.println("coinSchema Type after : " + coinSchemaDB.getCoinType());
-                    System.out.println("coinSchema Value after : " + coinSchemaDB.getCoinCount());
-                    //coinRepository.updateCoinBalance(coinSchemaDB.getCoinCount(), coinSchemaDB.getCoinType());
+                coinRepository.save(coin);
 
-                    coinRepository.save(coinSchemaDB);
+                return coinVOList;
 
+            }else if(Objects.equals(coinEntry.getKey(), "D") && coinEntry.getValue()>=dimes) {
 
-                    return getCoinSchemas(coinSchema, totalCoins, "Q", coinSchemasList);
+                totalCoins +=dimes;
+                cents=cents%10;
+                //Logic to return the list to UI
+                String typeOfCoin = "D";
+                extracted(totalCoins, coinVOList, typeOfCoin);
+                //logic to persist remaining coins
+                int coinCount = (int) (coinEntry.getValue()-dimes);
+                coin.setId(2);
+                coin.setCoinType("D");
+                coin.setCoinCount(coinCount);
 
-                }else {
-                    continue;
-                }
+                coinRepository.save(coin);
 
+                return coinVOList;
+            }else if(Objects.equals(coinEntry.getKey(), "N") && coinEntry.getValue()>=nickels) {
+
+                totalCoins +=nickels;
+                cents=cents%5;
+                //Logic to return the list to UI
+                String typeOfCoin = "N";
+                extracted(totalCoins, coinVOList, typeOfCoin);
+                //logic to persist remaining coins
+                int coinCount = (int) (coinEntry.getValue()-nickels);
+                coin.setId(3);
+                coin.setCoinType("N");
+                coin.setCoinCount(coinCount);
+
+                coinRepository.save(coin);
+
+                return coinVOList;
+            }else if(Objects.equals(coinEntry.getKey(), "P") && coinEntry.getValue()>=pennies) {
+
+                totalCoins +=pennies;
+                cents=cents%1;
+                //Logic to return the list to UI
+                String typeOfCoin = "P";
+                extracted(totalCoins, coinVOList, typeOfCoin);
+                //logic to persist remaining coins
+                int coinCount = (int) (coinEntry.getValue()-pennies);
+                coin.setId(4);
+                coin.setCoinType("P");
+                coin.setCoinCount(coinCount);
+
+                coinRepository.save(coin);
+
+                return coinVOList;
             }
 
-            if(coinSchemaDB.getCoinType().equals("D")){
-                dimes = Math.round((int)cents/10);
-                if(coinSchemaDB.getCoinCount()>=dimes){
-
-                    totalCoins +=dimes;
-                    cents=cents%10;
-                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-dimes);
-                    //call service to update the count of DIMES
-                    coinRepository.save(coinSchemaDB);
-                    return getCoinSchemas(coinSchema, totalCoins, "D", coinSchemasList);
-
-                }else {
-                    continue;
-                }
-            }
-
-            if(coinSchemaDB.getCoinType().equals("N")){
-                nickels = Math.round((int)cents/5);
-                if(coinSchemaDB.getCoinCount()>=nickels){
-
-                    totalCoins +=nickels;
-                    cents=cents%5;
-                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-nickels);
-                    //call service to update the count of NICKELS
-                    coinRepository.save(coinSchemaDB);
-                    return getCoinSchemas(coinSchema, totalCoins, "N", coinSchemasList);
-
-                }else {
-                    continue;
-                }
-            }
-
-            if(coinSchemaDB.getCoinType().equals("P")){
-                pennies = Math.round((int)cents/1);
-                if(coinSchemaDB.getCoinCount()>=pennies){
-
-                    totalCoins +=pennies;
-                    //cents=cents%1;
-                    coinSchemaDB.setCoinCount(coinSchemaDB.getCoinCount()-pennies);
-                    //call service to update the count of NICKELS
-                    coinRepository.save(coinSchemaDB);
-                    return getCoinSchemas(coinSchema, totalCoins, "P", coinSchemasList);
-
-                }else {
-                    return null;
-                }
-            }
 
         }
 
@@ -117,9 +122,29 @@ public class CoinService {
         System.out.println("Pennies: " + pennies);
         System.out.println("totalCoins: " + totalCoins);
 
+        if(coinVOList.size()>0){
+            return coinVOList; // When all coins are finished, then the final size will be 0
+        }else {
+            return null;
+        }
+        //return coinVOList;
 
-        return coinSchemasList;
     }
+
+    private void extracted(int totalCoins, List<Coin> coinVOList, String typeOfCoin) {
+        //Logic to return the list to UI
+        Coin coinVO = new Coin();
+        coinVO.setCoinCount(totalCoins);
+        coinVO.setCoinType(typeOfCoin);
+        coinVOList.add(coinVO);
+    }
+
+
+    public List<Coin> getCoinStatus(){
+        List<Coin> coinCountLstFromDB = coinRepository.getCoinDetails();
+        return coinCountLstFromDB;
+    }
+
 
     private List<Coin> getCoinSchemas(Coin coinSchema, int totalCoins, String p, List<Coin> coinSchemasList) {
         coinSchema.setCoinCount(totalCoins);
