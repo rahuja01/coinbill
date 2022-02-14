@@ -40,15 +40,33 @@ public class CoinService {
 
         Coin coin = new Coin();
 
+        //@Todo - Sum of all cointCount in DB and verify with cents -> Return NUll since no available coin conversion rate available.
+        int totalCentsInDB = 0;
+        for (Map.Entry<String, Long> coinEntry : linkedHashMap.entrySet()) {
+            if(Objects.equals(coinEntry.getKey(), "Q"))
+                totalCentsInDB += coinEntry.getValue()*0.25*100;
+            if(Objects.equals(coinEntry.getKey(), "D"))
+                totalCentsInDB += coinEntry.getValue()*0.10*100;
+            if(Objects.equals(coinEntry.getKey(), "N"))
+                totalCentsInDB += coinEntry.getValue()*0.05*100;
+            if(Objects.equals(coinEntry.getKey(), "P"))
+                totalCentsInDB += coinEntry.getValue()*0.01*100;
+        }
+
+
         for (Map.Entry<String, Long> coinEntry : linkedHashMap.entrySet()) {
             System.out.println(coinEntry.getKey() + ":" + coinEntry.getValue());
-
-            //@Todo - Sum of all cointCount in DB and verify with cents -> Return NUll since no available coin conversion rate available.
 
             quarters = Math.round((int)cents/25);
             dimes = Math.round((int)cents/10);
             nickels = Math.round((int)cents/5);
             pennies = Math.round((int)cents/1);
+
+            if(totalCentsInDB<cents){
+                return null;
+            }
+            //Handle the edge case wherein the portions of coins are allocated and sum of DB coins is less,
+            // then rollback else throw exception that cents requested is greater than the DB coins
 
             if(Objects.equals(coinEntry.getKey(), "Q") && coinEntry.getValue()!=0 && cents!=0){
 
